@@ -1,56 +1,69 @@
 let playerScore = 0;
 let computerScore = 0;
+let tieScore = 0;
+let round = 0;
 
-function getComputerChoice () {
-    //Create array with 3 choices 
-    choices = ['Rock', "Paper", "Scissors"];
+const resultDiv = document.createElement('div');
+document.body.appendChild(resultDiv);
 
-    return (choices[(Math.floor(Math.random() * choices.length))]);
-
+function getComputerChoice() {
+    const choices = ['Rock', 'Paper', 'Scissors'];
+    return choices[Math.floor(Math.random() * choices.length)];
 }
 
-// Function that plays a single round of RPS
 function playSingleRound(playerSelection, computerSelection) {
-
-    //convert to lowercase 
     playerSelection = playerSelection.toLowerCase();
     computerSelection = computerSelection.toLowerCase();
 
     if (playerSelection === computerSelection) {
-        console.log("It's a tie!")
+        resultDiv.textContent = "It's a tie!";
+        tieScore += 1;
+    } else if (
+        (playerSelection === "rock" && computerSelection === "scissors") ||
+        (playerSelection === "paper" && computerSelection === "rock") ||
+        (playerSelection === "scissors" && computerSelection === "paper")
+    ) {
+        resultDiv.textContent = "Player wins!";
+        playerScore += 1;
+    } else {
+        resultDiv.textContent = "Computer wins!";
+        computerScore += 1;
     }
-    else if (
-    (playerSelection === "rock" && computerSelection === "scissors") ||
-    (playerSelection === "paper" && computerSelection === "rock") ||
-    (playerSelection === "scissors" && computerSelection === "paper")
-) {
-    console.log("Player wins!")
-    playerScore += 1;
-}  else {
-    console.log("Computer wins!")
-    computerScore += 1;
+
+    round++;
+    updateScores();
 }
+
+function updateScores() {
+    resultDiv.textContent += ` Player: ${playerScore}, Computer: ${computerScore}, Tie: ${tieScore}`;
+
+    if (playerScore === 5) {
+        resultDiv.textContent += ">Player wins the match<";
+    } else if (computerScore === 5) {
+        resultDiv.textContent += ">Computer wins the match<";
+    }
 }
+
+let rock = document.querySelector("#rock");
+let paper = document.querySelector("#paper");
+let scissors = document.querySelector("#scissors");
+
+rock.addEventListener('click', () => {
+    playerSelection = "rock";
+    playGame();
+});
+paper.addEventListener('click', () => {
+    playerSelection = "paper";
+    playGame();
+});
+scissors.addEventListener('click', () => {
+    playerSelection = "scissors";
+    playGame();
+});
 
 function playGame() {
-
-    for (i = 0; i<5; i++) {
-    const playerSelection = prompt("Select: Rock, Paper or Sisscors?");
-    const computerSelection = getComputerChoice();
-
-    playSingleRound(playerSelection, computerSelection);
+    if (round < 5) {
+        let computerSelection = getComputerChoice();
+        playSingleRound(playerSelection, computerSelection);
     }
-
-    if (playerScore > computerScore) {
-        console.log("Player wins the match");
-
-    } else {
-        console.log("Computer wins the match");
-    }
-
-
 }
-
-playGame();
-
-
